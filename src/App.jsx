@@ -76,9 +76,7 @@ class App extends Component {
   });
 
   render = () => {
-    const {
-      books, openEditModal, activeBook, editIndex,
-    } = this.state;
+    const { books, openEditModal, activeBook, editIndex } = this.state;
     return (
       <Body>
         <Heading>

@@ -25,8 +25,17 @@ export const ActionArea = styled.div`
   display: flex;
   align-self: flex-end;
 `;
-
-export const SaveButton = styled(Button)`
+const ButtonStyle = styled(Button)`
   height: 25px;
   margin-left: 15px;
 `;
+
+export const SaveButton = ButtonStyle.extend.attrs({
+  type:"submit",
+  color:"primary",
+  variant:"raised"
+})``;
+export const CancelButton = ButtonStyle.extend.attrs({
+  color:"secondary",
+  variant:"raised"
+})``;

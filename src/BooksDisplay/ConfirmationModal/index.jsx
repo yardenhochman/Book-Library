@@ -2,15 +2,14 @@ import React from 'react';
 import {
   ModalBody, BookTitle, ActionArea, SaveButton,
 } from './style';
+import { CancelButton } from '../../EditBox/style';
 
 export default ({ removeBook, closeModal }) => (
   <ModalBody>
-    <BookTitle>
-Are you sure?
-    </BookTitle>
+    <BookTitle>Are you sure?</BookTitle>
     <ActionArea>
-      <SaveButton onClick={closeModal} color="secondary" variant="raised">CANCEL</SaveButton>
-      <SaveButton onClick={removeBook} color="primary" variant="raised">OK</SaveButton>
+      <CancelButton onClick={closeModal}>CANCEL</CancelButton>
+      <SaveButton onClick={removeBook}>OK</SaveButton>
     </ActionArea>
   </ModalBody>
 );
