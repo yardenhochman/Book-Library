@@ -2,10 +2,11 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import BooksDisplay from './BooksDisplay';
 import EditBox from './EditBox';
-import { cleanUpJSON } from './Helpers';
+import { cleanUpJSON, collectImages, newBookState } from './Helpers';
 import {
   AddBookButton, AppTitle, Body, BooksArea, BooksHeaderImage, EditModal, Heading,
 } from './style';
+
 
 class App extends Component {
   state = {
@@ -17,47 +18,18 @@ class App extends Component {
 
   componentDidMount = () => {
     axios('books.json')
-      .then(({ data: books }) => {
-        this.setState({ books: cleanUpJSON(books) });
-        this.collectImages();
-      })
+      .then(async ({ data: books }) => this.setState({ books: cleanUpJSON(await collectImages(books)) }))
       .catch(err => console.log(err));
   }
 
   setBookToEdit = (id) => {
     if (id === -1) {
-      const newBook = {
-        id: Math.floor(Math.random() * 1000000000),
-        title: '',
-        author: '',
-        published_date: '',
-      };
-      return this.setState({
-        editIndex: false,
-        openEditModal: true,
-        activeBook: { ...newBook },
-      });
+      return this.setState(newBookState);
     }
     const { books } = this.state;
-    const indexToEdit = books.findIndex(book => book.id === id);
-    const book = { ...books[indexToEdit] };
-    this.setState({ editIndex: indexToEdit, openEditModal: true, activeBook: book });
-  }
-
-  collectImages = () => {
-    const { books } = this.state;
-    books.map((book, i) => {
-      axios(`https://www.googleapis.com/books/v1/volumes?q=${book.title.replace(' ', '+')}`)
-        .then(({ data: { items } }) => {
-          items.some((item) => {
-            if (item.volumeInfo && item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail) {
-              books[i].image = item.volumeInfo.imageLinks.thumbnail;
-              this.setState({ books });
-              return true;
-            }
-          });
-        });
-    });
+    const editIndex = books.findIndex(book => book.id === id);
+    const book = { ...books[editIndex] };
+    this.setState({ editIndex, openEditModal: true, activeBook: book });
   }
 
   collectImage = async (book) => {
@@ -87,7 +59,6 @@ class App extends Component {
   save = async () => {
     const { books, activeBook, editIndex } = this.state;
     activeBook.title = activeBook.title.removeSpecialCharacters().capitalize();
-    console.log(activeBook);
     if (editIndex !== false) {
       books[editIndex] = { ...activeBook };
     } else {
