@@ -66,7 +66,6 @@ class App extends Component {
     const { data: { items } } = await axios(`https://www.googleapis.com/books/v1/volumes?q=${book.title.replace(new RegExp(' ', 'g'), '+')}`);
     let image;
     await items.some((item) => {
-      console.log('here');
       if (item.volumeInfo && item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail) {
         image = item.volumeInfo.imageLinks.thumbnail;
       }
