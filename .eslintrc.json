@@ -1,0 +1,10 @@
+{
+    "extends": ["airbnb"],
+    "env": {
+        "browser": true
+    },
+    "parser": "babel-eslint",
+    "rules": {
+        "linebreak-style": 0
+    }
+}
