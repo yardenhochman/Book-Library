@@ -9,12 +9,10 @@ import {
 import DeleteModal from './DeleteModal';
 
 export default ({ books, removeBook, setBookToEdit }) => books.map((book, i) => (
-  <BookCard key={book.title + i}>
+  <BookCard key={book.id}>
     {
     book.image && (
-    <CardMedia>
-      <img src={book.image} />
-    </CardMedia>
+      <img src={book.image} alt="" />
     )
   }
     <BookDetails>
@@ -26,11 +24,10 @@ export default ({ books, removeBook, setBookToEdit }) => books.map((book, i) => 
           <BookTitle>
             {book.title}
           </BookTitle>
-
+          <BookAuthor>
+            {book.author}
+          </BookAuthor>
         </Heading>
-        <BookAuthor>
-          {book.author}
-        </BookAuthor>
       </CardContent>
       <ActionArea>
         <Action onClick={() => setBookToEdit(book.id)}>

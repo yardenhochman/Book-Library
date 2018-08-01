@@ -11,7 +11,6 @@ class App extends Component {
   state = {
     books: [],
     openEditModal: false,
-    openAddModal: false,
     activeBook: false,
     editIndex: false,
   }
@@ -63,6 +62,18 @@ class App extends Component {
     });
   }
 
+  collectImage = async (book) => {
+    const { data: { items } } = await axios(`https://www.googleapis.com/books/v1/volumes?q=${book.title.replace(new RegExp(' ', 'g'), '+')}`);
+    let image;
+    await items.some((item) => {
+      console.log('here');
+      if (item.volumeInfo && item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail) {
+        image = item.volumeInfo.imageLinks.thumbnail;
+      }
+    });
+    return image;
+  }
+
   removeBook = (id) => {
     const { books } = this.state;
     const indexToRemove = books.findIndex(book => book.id === id);
@@ -76,14 +87,12 @@ class App extends Component {
     this.setState({ activeBook });
   }
 
-  save = () => {
+  save = async () => {
     const { books, activeBook, editIndex } = this.state;
     if (editIndex) {
       books[editIndex] = { ...activeBook };
     } else {
-      if (books.some(book => book.title === activeBook.title)) {
-        return this.setState({ error: 'This name already exists!' });
-      }
+      activeBook.image = await this.collectImage(activeBook);
       books.push(activeBook);
     }
     this.setState({ books });

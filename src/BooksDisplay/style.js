@@ -29,6 +29,7 @@ export const BookCard = styled(Card)`
   margin-bottom: 5vh;
   padding: 1vh;
   background: rgb(255, 154, 96, 0.2);
+  background: #f2f2f2;
 
   &:hover ${Action} {
     display: block;
@@ -50,6 +51,8 @@ export const BookAuthor = styled(Typography).attrs({
 })``;
 export const Heading = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   margin-bottom: 1vh;
+  justify-content: center;
+  align-items: center;
 `;
