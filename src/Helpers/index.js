@@ -46,13 +46,9 @@ export const collectImage = async (book) => {
   return book;
 };
 
-export const NEW_BOOK_STATE = {
-  editIndex: false,
-  openEditModal: true,
-  activeBook: {
+export const NEW_BOOK_OBJECT = {
     id: Math.floor(Math.random() * 1000000000),
     title: '',
     author: '',
-    published_date: '',
-  },
+    published_date: ''
 };

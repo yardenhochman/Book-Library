@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import BooksDisplay from './BooksDisplay';
 import EditBox from './EditBox';
 import {
-  cleanUpJSON, collectImages, NEW_BOOK_STATE, collectImage,
+  cleanUpJSON, collectImages, collectImage,
 } from './Helpers';
 import {
   AddBookButton, AppTitle, Body, BooksArea, BooksHeaderImage, EditModal, Heading,
@@ -24,7 +24,16 @@ class App extends Component {
   }
 
   setBookToEdit = (id) => {
-    if (id === -1) return this.setState(NEW_BOOK_STATE);
+    if (id === -1) return this.setState({
+      editIndex: false,
+      openEditModal: true,
+      activeBook: {
+        id: Math.floor(Math.random() * 1000000000),
+        title: '',
+        author: '',
+        published_date: '',
+      },
+    });
 
     const { books } = this.state;
     const editIndex = books.findIndex(book => book.id === id);
@@ -55,7 +64,16 @@ class App extends Component {
     this.closeEdit();
   }
 
-  closeEdit = () => this.setState({ editIndex: false, openEditModal: false, activeBook: {} });
+  closeEdit = () => this.setState({
+    editIndex: false,
+    openEditModal: false,
+    activeBook: {
+      id: Math.floor(Math.random() * 1000000000),
+      title: '',
+      author: '',
+      published_date: '',
+    },
+  });
 
   render = () => {
     const {
@@ -65,8 +83,12 @@ class App extends Component {
       <Body>
         <Heading>
           <BooksHeaderImage />
-          <AppTitle>The Books Library</AppTitle>
-          <AddBookButton onClick={() => this.setBookToEdit(-1)}>Add Book</AddBookButton>
+          <AppTitle>
+The Books Library
+</AppTitle>
+          <AddBookButton onClick={() => this.setBookToEdit(-1)}>
+Add Book
+</AddBookButton>
         </Heading>
         <BooksArea>
           <BooksDisplay

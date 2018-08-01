@@ -2,10 +2,21 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
-export const SaveButton = styled(Button)`
+const ButtonStyle = styled(Button)`
   height: 25px;
   margin-left: 15px;
 `;
+
+export const SaveButton = ButtonStyle.extend.attrs({
+  type:"submit",
+  color:"primary",
+  variant:"raised"
+})``;
+export const CancelButton = ButtonStyle.extend.attrs({
+  color:"secondary",
+  variant:"raised"
+})``;
+
 
 export const ModalBody = styled(ValidatorForm)`
   margin: 30vh 20vw;
@@ -17,7 +28,10 @@ export const ModalBody = styled(ValidatorForm)`
   background: #ffffff;
 `;
 
-export const TitleInput = styled(TextValidator)`
+export const TitleInput = styled(TextValidator).attrs({
+  name:"title",
+  label:"Title"
+})`
   color: rgba(0, 0, 0, 0.87);
   font-size: 1.5rem;
   font-weight: 400;
@@ -27,6 +41,7 @@ export const TitleInput = styled(TextValidator)`
 export const DateInput = styled(TextValidator).attrs({
   id: 'date',
   type: 'date',
+  name: 'date',
 })`
   color: rgba(0, 0, 0, 0.87);
   font-weight: 400;
@@ -35,7 +50,10 @@ export const DateInput = styled(TextValidator).attrs({
   font-size: 0.875rem;
 `;
 
-export const AuthorInput = styled(TextValidator)`
+export const AuthorInput = styled(TextValidator).attrs({
+  name:"author",
+  label:"Author"
+})`
   font-size: 0.875rem;
   font-weight: 400;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
