@@ -9,12 +9,8 @@ export default ({ removeBook, closeModal }) => (
 Are you sure?
     </BookTitle>
     <ActionArea>
-      <SaveButton onClick={closeModal} color="secondary" variant="raised">
-Cancel
-      </SaveButton>
-      <SaveButton onClick={removeBook} color="primary" variant="raised">
-DELETE
-      </SaveButton>
+      <SaveButton onClick={closeModal} color="secondary" variant="raised">CANCEL</SaveButton>
+      <SaveButton onClick={removeBook} color="primary" variant="raised">OK</SaveButton>
     </ActionArea>
   </ModalBody>
 );

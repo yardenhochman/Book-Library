@@ -83,12 +83,8 @@ class App extends Component {
       <Body>
         <Heading>
           <BooksHeaderImage />
-          <AppTitle>
-The Books Library
-</AppTitle>
-          <AddBookButton onClick={() => this.setBookToEdit(-1)}>
-Add Book
-</AddBookButton>
+          <AppTitle>The Books Library</AppTitle>
+          <AddBookButton onClick={() => this.setBookToEdit(-1)}>Add Book</AddBookButton>
         </Heading>
         <BooksArea>
           <BooksDisplay
@@ -108,7 +104,7 @@ Add Book
             edit={this.edit}
             save={this.save}
             books={books}
-            newBook={editIndex === false}
+            editIndex={editIndex}
           />
         </EditModal>
       </Body>

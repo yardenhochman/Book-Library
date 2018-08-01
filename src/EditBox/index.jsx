@@ -5,23 +5,23 @@ import {
 
 export default class Form extends React.Component {
   componentDidMount() {
-    const { books, activeBook } = this.props;
-    ModalBody.addValidationRule('isNameUnique', () => books.every(book => (book.title !== activeBook.title)));
+    const { books, activeBook, editIndex } = this.props;
+    const withoutCurrent = [...books];
+    if (editIndex!==false) withoutCurrent.splice(editIndex,1);
+    ModalBody.addValidationRule('isNameUnique', () => withoutCurrent.every(book => (book.title !== activeBook.title)));
   }
 
     onChange = ({ target: { value, name } }) => this.props.edit(name, value);
 
     render = () => {
-      const {
-        activeBook, save, closeEdit, newBook,
-      } = this.props;
+      const { activeBook, save, closeEdit } = this.props;
       if (!activeBook) return null;
       return (
         <ModalBody ref="form" onSubmit={save} onError={errors => console.log(errors)}>
           <Heading>
             <TitleInput
               value={activeBook.title}
-              validators={newBook ? ['required', 'isNameUnique'] : ['required']}
+              validators={['required', 'isNameUnique']}
               errorMessages={['this field is required', 'This title already exists']}
               onChange={this.onChange}
             />
@@ -40,7 +40,7 @@ export default class Form extends React.Component {
           />
           <ActionArea>
             <CancelButton onClick={closeEdit}>Cancel</CancelButton>
-            <SaveButton>OK</SaveButton>
+            <SaveButton>Save</SaveButton>
           </ActionArea>
         </ModalBody>
       );
