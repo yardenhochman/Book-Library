@@ -2,11 +2,12 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import BooksDisplay from './BooksDisplay';
 import EditBox from './EditBox';
-import { cleanUpJSON, collectImages, newBookState } from './Helpers';
+import {
+  cleanUpJSON, collectImages, NEW_BOOK_STATE, collectImage,
+} from './Helpers';
 import {
   AddBookButton, AppTitle, Body, BooksArea, BooksHeaderImage, EditModal, Heading,
 } from './style';
-
 
 class App extends Component {
   state = {
@@ -23,24 +24,12 @@ class App extends Component {
   }
 
   setBookToEdit = (id) => {
-    if (id === -1) {
-      return this.setState(newBookState);
-    }
+    if (id === -1) return this.setState(NEW_BOOK_STATE);
+
     const { books } = this.state;
     const editIndex = books.findIndex(book => book.id === id);
-    const book = { ...books[editIndex] };
-    this.setState({ editIndex, openEditModal: true, activeBook: book });
-  }
-
-  collectImage = async (book) => {
-    const { data: { items } } = await axios(`https://www.googleapis.com/books/v1/volumes?q=${book.title.replace(new RegExp(' ', 'g'), '+')}`);
-    let image;
-    await items.some((item) => {
-      if (item.volumeInfo && item.volumeInfo.imageLinks && item.volumeInfo.imageLinks.thumbnail) {
-        image = item.volumeInfo.imageLinks.thumbnail;
-      }
-    });
-    return image;
+    const activeBook = { ...books[editIndex] };
+    return this.setState({ editIndex, activeBook, openEditModal: true });
   }
 
   removeBook = (id) => {
@@ -59,12 +48,9 @@ class App extends Component {
   save = async () => {
     const { books, activeBook, editIndex } = this.state;
     activeBook.title = activeBook.title.removeSpecialCharacters().capitalize();
-    if (editIndex !== false) {
-      books[editIndex] = { ...activeBook };
-    } else {
-      activeBook.image = await this.collectImage(activeBook);
-      books.push(activeBook);
-    }
+    const newBook = editIndex === false;
+    if (newBook) books.push(await collectImage(activeBook));
+    else books[editIndex] = { ...activeBook };
     this.setState({ books });
     this.closeEdit();
   }
@@ -79,12 +65,8 @@ class App extends Component {
       <Body>
         <Heading>
           <BooksHeaderImage />
-          <AppTitle>
-The Books Library
-          </AppTitle>
-          <AddBookButton onClick={() => this.setBookToEdit(-1)}>
-Add Book
-          </AddBookButton>
+          <AppTitle>The Books Library</AppTitle>
+          <AddBookButton onClick={() => this.setBookToEdit(-1)}>Add Book</AddBookButton>
         </Heading>
         <BooksArea>
           <BooksDisplay
