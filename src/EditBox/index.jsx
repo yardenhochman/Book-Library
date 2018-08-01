@@ -13,7 +13,7 @@ export default class Form extends React.Component {
 
     render = () => {
       const {
-        activeBook, save, closeEdit, error,
+        activeBook, save, closeEdit, newBook,
       } = this.props;
       if (!activeBook) return null;
       return (
@@ -23,7 +23,7 @@ export default class Form extends React.Component {
               value={activeBook.title}
               name="title"
               label="Title"
-              validators={['required', 'isNameUnique']}
+              validators={newBook ? ['required', 'isNameUnique'] : ['required']}
               errorMessages={['this field is required', 'This title already exists']}
               onChange={this.onChange}
             />

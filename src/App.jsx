@@ -32,13 +32,11 @@ class App extends Component {
         author: '',
         published_date: '',
       };
-      return this.setState(
-        {
-          editIndex: false,
-          openEditModal: true,
-          activeBook: { ...newBook },
-        },
-      );
+      return this.setState({
+        editIndex: false,
+        openEditModal: true,
+        activeBook: { ...newBook },
+      });
     }
     const { books } = this.state;
     const indexToEdit = books.findIndex(book => book.id === id);
@@ -88,7 +86,9 @@ class App extends Component {
 
   save = async () => {
     const { books, activeBook, editIndex } = this.state;
-    if (editIndex) {
+    activeBook.title = activeBook.title.removeSpecialCharacters().capitalize();
+    console.log(activeBook);
+    if (editIndex !== false) {
       books[editIndex] = { ...activeBook };
     } else {
       activeBook.image = await this.collectImage(activeBook);
@@ -102,7 +102,7 @@ class App extends Component {
 
   render = () => {
     const {
-      books, openEditModal, activeBook,
+      books, openEditModal, activeBook, editIndex,
     } = this.state;
     return (
       <Body>
@@ -133,6 +133,7 @@ Add Book
             edit={this.edit}
             save={this.save}
             books={books}
+            newBook={editIndex === false}
           />
         </EditModal>
       </Body>
