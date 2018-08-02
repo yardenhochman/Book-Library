@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  ModalBody, TitleInput, AuthorInput, Heading, DateInput, SaveButton, CancelButton, ActionArea,
+  ModalBody, TitleInput, AuthorInput, Heading, DateInput, SaveButton, CancelButton, ActionArea, RightEdge
 } from './style';
 
 export default class Form extends React.Component {
@@ -18,30 +18,34 @@ export default class Form extends React.Component {
       if (!activeBook) return null;
       return (
         <ModalBody ref="form" onSubmit={save} onError={errors => console.log(errors)}>
-          <Heading>
+        {activeBook.image && <img src={activeBook.image} alt="" />}
+        <Heading>
             <TitleInput
               value={activeBook.title}
               validators={['required', 'isNameUnique']}
               errorMessages={['this field is required', 'This title already exists']}
               onChange={this.onChange}
             />
-            <DateInput
-              value={activeBook.date || ''}
-              onChange={this.onChange}
-              validators={['required']}
-              errorMessages={['this field is required']}
-            />
-          </Heading>
-          <AuthorInput
+            <AuthorInput
             value={activeBook.author}
             validators={['required', 'matchRegexp:^([^0-9]*)$', 'isString']}
             errorMessages={['this field is required', 'Invalid Author Name', 'Invalid Author Name']}
             onChange={this.onChange}
           />
+
+          </Heading>
+          <RightEdge>
+          <DateInput
+              value={activeBook.date || ''}
+              onChange={this.onChange}
+              validators={['required']}
+              errorMessages={['this field is required']}
+            />
           <ActionArea>
             <CancelButton onClick={closeEdit}>Cancel</CancelButton>
             <SaveButton>Save</SaveButton>
           </ActionArea>
+          </RightEdge>
         </ModalBody>
       );
     }

@@ -38,10 +38,18 @@ class App extends Component {
     this.setState({ books });
   }
 
-  edit = (property, value) => {
+  updateImageOnEdit = async (book) => {
+    const withImage = await collectImage(book);
+    const { activeBook } = this.state;
+    activeBook.image = withImage.image;
+    this.setState({ activeBook })
+  }
+
+  edit = async (property, value) => {
     const { activeBook } = this.state;
     activeBook[property] = value.capitalize();
     this.setState({ activeBook });
+    this.updateImageOnEdit(activeBook)
   }
 
   save = async () => {
@@ -52,7 +60,8 @@ class App extends Component {
       books.push(await collectImage(activeBook));
     else if (newBook.title!==books[editIndex].title)
       books[editIndex] = await collectImage(activeBook)
-    else books[editIndex] = { ...activeBook };
+    else
+      books[editIndex] = { ...activeBook };
     this.setState({ books });
     this.closeEdit();
   }
