@@ -38,9 +38,9 @@ class App extends Component {
     this.setState({ books });
   }
 
-  updateImageOnEdit = async (book) => {
-    const withImage = await collectImage(book);
+  updateImage = async () => {
     const { activeBook } = this.state;
+    const withImage = await collectImage(activeBook);
     activeBook.image = withImage.image;
     this.setState({ activeBook })
   }
@@ -49,7 +49,6 @@ class App extends Component {
     const { activeBook } = this.state;
     activeBook[property] = value.capitalize();
     this.setState({ activeBook });
-    this.updateImageOnEdit(activeBook)
   }
 
   save = async () => {
@@ -58,8 +57,6 @@ class App extends Component {
     const newBook = editIndex === false;
     if (newBook)
       books.push(await collectImage(activeBook));
-    else if (newBook.title!==books[editIndex].title)
-      books[editIndex] = await collectImage(activeBook)
     else
       books[editIndex] = { ...activeBook };
     this.setState({ books });
@@ -114,6 +111,7 @@ class App extends Component {
             save={this.save}
             books={books}
             editIndex={editIndex}
+            updateImage={this.updateImage}
           />
         </EditModal>
       </Body>
