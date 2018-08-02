@@ -4,7 +4,9 @@ import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 
 export const ModalBody = styled(Card)`
-  margin: 30vh 20vw;
+  position: relative;
+  top: 40%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

@@ -52,6 +52,7 @@ class App extends Component {
   }
 
   save = async () => {
+    this.setState({ openEditModal: false})
     const { books, activeBook, editIndex } = this.state;
     activeBook.title = activeBook.title.removeSpecialCharacters().capitalize();
     const newBook = editIndex === false;
@@ -60,7 +61,7 @@ class App extends Component {
     else
       books[editIndex] = { ...activeBook };
     this.setState({ books });
-    this.closeEdit();
+    this.cleanEditState();
   }
   addNewBook = () => this.setState({
     editIndex: false,
@@ -72,9 +73,8 @@ class App extends Component {
       published_date: '',
     },
   });
-  closeEdit = () => this.setState({
+  cleanEditState = () => this.setState({
     editIndex: false,
-    openEditModal: false,
     activeBook: {
       id: Math.floor(Math.random() * 1000000000),
       title: '',
