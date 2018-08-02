@@ -17,33 +17,23 @@ class App extends Component {
     editIndex: false,
   }
 
-  componentDidMount = () => {
-    axios('books.json')
-      .then(async ({ data: books }) => this.setState({ books: cleanUpJSON(await collectImages(books)) }))
-      .catch(err => console.log(err));
+  componentDidMount = async () => {
+    const { data: books } = await axios('books.json');
+    this.setState({ books: cleanUpJSON(await collectImages(books)) });
   }
 
-  setBookToEdit = (id) => {
-    if (id === -1) return this.setState({
-      editIndex: false,
-      openEditModal: true,
-      activeBook: {
-        id: Math.floor(Math.random() * 1000000000),
-        title: '',
-        author: '',
-        published_date: '',
-      },
-    });
+  setBookToEdit = currentBookId => {
+    if (currentBookId === -1) return this.addNewBook()
 
     const { books } = this.state;
-    const editIndex = books.findIndex(book => book.id === id);
+    const editIndex = books.findIndex(book => book.id === currentBookId);
     const activeBook = { ...books[editIndex] };
     return this.setState({ editIndex, activeBook, openEditModal: true });
   }
 
-  removeBook = (id) => {
+  removeBook = currentBookId => {
     const { books } = this.state;
-    const indexToRemove = books.findIndex(book => book.id === id);
+    const indexToRemove = books.findIndex(book => book.id === currentBookId);
     books.splice(indexToRemove, 1);
     this.setState({ books });
   }
@@ -58,12 +48,24 @@ class App extends Component {
     const { books, activeBook, editIndex } = this.state;
     activeBook.title = activeBook.title.removeSpecialCharacters().capitalize();
     const newBook = editIndex === false;
-    if (newBook) books.push(await collectImage(activeBook));
+    if (newBook)
+      books.push(await collectImage(activeBook));
+    else if (newBook.title!==books[editIndex].title)
+      books[editIndex] = await collectImage(activeBook)
     else books[editIndex] = { ...activeBook };
     this.setState({ books });
     this.closeEdit();
   }
-
+  addNewBook = () => this.setState({
+    editIndex: false,
+    openEditModal: true,
+    activeBook: {
+      id: Math.floor(Math.random() * 1000000000),
+      title: '',
+      author: '',
+      published_date: '',
+    },
+  });
   closeEdit = () => this.setState({
     editIndex: false,
     openEditModal: false,

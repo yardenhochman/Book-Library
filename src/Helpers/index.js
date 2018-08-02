@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+const GOOGLE_API = `https://www.googleapis.com/books/v1/volumes?q=`
 
 String.prototype.capitalize = function () {
   const splitStr = this.toLowerCase().split(' ');
@@ -24,7 +25,8 @@ export function cleanUpJSON(books) {
 }
 
 export const collectImages = async (books) => {
-  const imagesRequests = books.map(book => axios(`https://www.googleapis.com/books/v1/volumes?q=${book.title.replace(' ', '+')}`));
+  const imagesRequests = books.map(
+    book => axios(GOOGLE_API+book.title.replace(' ', '+')));
   const booksResponses = await Promise.all(imagesRequests);
   const booksWithImages = booksResponses.map(({ data: { items } }, i) => {
     items.some(({ volumeInfo: { imageLinks: { thumbnail } = {} } = {} } = {}) => {
@@ -40,7 +42,7 @@ export const collectImages = async (books) => {
 
 export const collectImage = async (book) => {
   const q = book.title.replace(new RegExp(' ', 'g'), '+');
-  const { data: { items } } = await axios(`https://www.googleapis.com/books/v1/volumes?q=${q}`);
+  const { data: { items } } = await axios(GOOGLE_API+q);
   const { volumeInfo: { imageLinks: { thumbnail: image } } } = await items.find(({ volumeInfo: { imageLinks: { thumbnail } = {} } = {} } = {}) => thumbnail);
   book.image = image;
   return book;

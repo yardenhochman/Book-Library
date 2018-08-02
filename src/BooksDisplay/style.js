@@ -39,7 +39,9 @@ export const BookCard = styled(Card)`
 export const BookTitle = styled(Typography).attrs({
   variant: 'headline',
   component: 'h2',
-})``;
+})`
+  font-size: 1.6rem;
+`;
 export const ReleaseDate = styled(Typography).attrs({
   component: 'p',
   type: 'date',
@@ -48,11 +50,11 @@ export const ReleaseDate = styled(Typography).attrs({
 `;
 export const BookAuthor = styled(Typography).attrs({
   color: 'textSecondary',
-})``;
+})`
+`;
 export const Heading = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1vh;
   justify-content: center;
   align-items: center;
 `;
