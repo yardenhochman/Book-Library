@@ -58,6 +58,8 @@ class App extends Component {
     const newBook = editIndex === false;
     if (newBook)
       books.push(await collectImage(activeBook));
+    else if (newBook.title!==books[editIndex].title)
+      books[editIndex] = await collectImage(activeBook)
     else
       books[editIndex] = { ...activeBook };
     this.setState({ books });
