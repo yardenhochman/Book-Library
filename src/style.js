@@ -1,5 +1,4 @@
-import styled from "styled-components";
-import Modal from '@material-ui/core/Modal';
+import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 
 
@@ -36,13 +35,9 @@ export const BooksArea = styled.div`
   }
 `;
 
-export const EditModal = styled(Modal).attrs({
-  disableAutoFocus: true
-})``;
-
 export const AddBookButton = styled(Button).attrs({
-  variant: "raised",
-  color: "primary"
+  variant: 'raised',
+  color: 'primary',
 })`
   align-self: flex-start;
 `;

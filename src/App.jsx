@@ -1,124 +1,107 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import { connect } from 'redux-zero/react';
 import BooksDisplay from './BooksDisplay';
 import EditBox from './EditBox';
 import {
   cleanUpJSON, collectImages, collectImage,
 } from './Helpers';
 import {
-  AddBookButton, AppTitle, Body, BooksArea, BooksHeaderImage, EditModal, Heading,
+  AddBookButton, AppTitle, Body, BooksArea, BooksHeaderImage, Heading,
 } from './style';
+import actions from './actions';
 
 class App extends Component {
-  state = {
-    books: [],
-    openEditModal: false,
-    activeBook: false,
-    editIndex: false,
-  }
-
   componentDidMount = async () => {
+    const { loadBooks } = this.props;
     const { data: books } = await axios('books.json');
-    this.setState({ books: cleanUpJSON(await collectImages(books)) });
+    loadBooks(cleanUpJSON(await collectImages(books)));
   }
 
-  setBookToEdit = currentBookId => {
-    if (currentBookId === -1) return this.addNewBook()
-
-    const { books } = this.state;
+  setBookToEdit = (currentBookId) => {
+    if (currentBookId === -1) return this.addNewBook();
+    const {
+      books, setEditIndex, setActiveBook, setEditModal,
+    } = this.props;
     const editIndex = books.findIndex(book => book.id === currentBookId);
     const activeBook = { ...books[editIndex] };
-    return this.setState({ editIndex, activeBook, openEditModal: true });
+    setEditIndex(editIndex);
+    setActiveBook(activeBook);
+    setEditModal(true);
   }
 
-  removeBook = currentBookId => {
-    const { books } = this.state;
+  removeBook = (currentBookId) => {
+    const { books, loadBooks } = this.props;
     const indexToRemove = books.findIndex(book => book.id === currentBookId);
     books.splice(indexToRemove, 1);
-    this.setState({ books });
+    loadBooks(books);
   }
 
   updateImage = async () => {
-    const { activeBook } = this.state;
+    const { activeBook, setActiveBook } = this.props;
     const withImage = await collectImage(activeBook);
     activeBook.image = withImage.image;
-    this.setState({ activeBook })
-  }
-
-  edit = async (property, value) => {
-    const { activeBook } = this.state;
-    activeBook[property] = value.capitalize();
-    this.setState({ activeBook });
+    setActiveBook(activeBook);
   }
 
   save = async () => {
-    this.setState({ openEditModal: false})
-    const { books, activeBook, editIndex } = this.state;
+    const {
+      setEditModal, loadBooks, setEditIndex, books, activeBook, editIndex,
+    } = this.props;
+    setEditModal(false);
     activeBook.title = activeBook.title.removeSpecialCharacters().capitalize();
     const newBook = editIndex === false;
-    if (newBook)
+    if (newBook) {
       books.push(await collectImage(activeBook));
-    else if (newBook.title!==books[editIndex].title)
-      books[editIndex] = await collectImage(activeBook)
-    else
-      books[editIndex] = { ...activeBook };
-    this.setState({ books });
+    } else if (newBook.title !== books[editIndex].title) {
+      books[editIndex] = await collectImage(activeBook);
+    } else books[editIndex] = { ...activeBook };
+    loadBooks(books);
     this.cleanEditState();
   }
-  addNewBook = () => this.setState({
-    editIndex: false,
-    openEditModal: true,
-    activeBook: {
-      id: Math.floor(Math.random() * 1000000000),
-      title: '',
-      author: '',
-      published_date: '',
-    },
-  });
-  cleanEditState = () => this.setState({
-    editIndex: false,
-    activeBook: {
-      id: Math.floor(Math.random() * 1000000000),
-      title: '',
-      author: '',
-      published_date: '',
-    },
-  });
+
+  addNewBook = () => {
+    const { setEditIndex, setEditModal, addNewBook } = this.props;
+    setEditIndex(false);
+    setEditModal(true);
+    addNewBook();
+  }
+
 
   render = () => {
-    const { books, openEditModal, activeBook, editIndex } = this.state;
+    const {
+      books, openEditModal, activeBook, editIndex,
+    } = this.props;
     return (
       <Body>
         <Heading>
           <BooksHeaderImage />
-          <AppTitle>The Books Library</AppTitle>
-          <AddBookButton onClick={() => this.setBookToEdit(-1)}>Add Book</AddBookButton>
+          <AppTitle>
+The Books Library
+          </AppTitle>
+          <AddBookButton onClick={() => this.setBookToEdit(-1)}>
+Add Book
+          </AddBookButton>
         </Heading>
         <BooksArea>
           <BooksDisplay
-            books={books}
             removeBook={this.removeBook}
             setBookToEdit={this.setBookToEdit}
           />
         </BooksArea>
-        <EditModal
-          open={openEditModal}
-          onClose={this.closeEdit}
-        >
-          <EditBox
-            activeBook={activeBook}
-            closeEdit={this.closeEdit}
-            open={openEditModal}
-            edit={this.edit}
-            save={this.save}
-            books={books}
-            editIndex={editIndex}
-            updateImage={this.updateImage}
-          />
-        </EditModal>
+        <EditBox
+          save={this.save}
+          updateImage={this.updateImage}
+        />
       </Body>
     );
   }
 }
+const mapToProps = ({
+  books, openEditModal, activeBook, editIndex,
+}) => ({
+  books, openEditModal, activeBook, editIndex,
+});
 
-export default App;
+
+export default connect(mapToProps, actions)(App);

@@ -12,6 +12,7 @@
     "react-jss": "^8.6.1",
     "react-material-ui-form-validator": "^2.0.1",
     "react-scripts": "1.1.4",
+    "redux-zero": "^4.13.0",
     "styled-components": "^3.3.3"
   },
   "scripts": {
@@ -19,7 +20,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "deploy": "yarn build && surge ./build"
+    "deploy": "yarn build && surge ./build --domain http://wholesale-gold.surge.sh"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.5",

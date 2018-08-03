@@ -2,12 +2,14 @@ import React from 'react';
 import CardContent from '@material-ui/core/CardContent';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import { connect } from 'redux-zero/react';
 import {
   ActionArea, Action, BookCard, BookTitle, ReleaseDate, BookAuthor, Heading, BookDetails,
 } from './style';
 import DeleteModal from './DeleteModal';
+import actions from '../actions';
 
-export default ({ books, removeBook, setBookToEdit }) => books.map((book, i) => (
+const BookCards = ({ books, removeBook, setBookToEdit }) => books.map(book => (
   <BookCard key={book.id}>
     {book.image && <img src={book.image} alt="" />}
     <BookDetails>
@@ -35,3 +37,7 @@ export default ({ books, removeBook, setBookToEdit }) => books.map((book, i) => 
     </BookDetails>
   </BookCard>
 ));
+
+const mapToProps = ({ books }) => ({ books });
+
+export default connect(mapToProps, actions)(BookCards);

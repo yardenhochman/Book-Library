@@ -6,7 +6,7 @@ import { Action } from './style';
 
 export default class DeleteModal extends PureComponent {
   state = {
-    open: false
+    open: false,
   };
 
   openModal = () => this.setState({ open: true });
@@ -18,15 +18,22 @@ export default class DeleteModal extends PureComponent {
     this.props.removeBook();
   };
 
-  render = () => (
-    <React.Fragment>
-      <Modal
-        open={this.state.open}
-        onClose={this.closeModal}
-      >
-        <ConfirmationMessage closeModal={this.closeModal} removeBook={this.removeBook}/>
-      </Modal>
-      <Action onClick={this.openModal}>{this.props.children}</Action>
-    </React.Fragment>
-  );
-};
+  render = () => {
+    const {
+      state: { open }, props: { children }, closeModal, removeBook, openModal,
+    } = this;
+    return (
+      <React.Fragment>
+        <Modal
+          open={open}
+          onClose={closeModal}
+        >
+          <ConfirmationMessage closeModal={closeModal} removeBook={removeBook} />
+        </Modal>
+        <Action onClick={openModal}>
+          {children}
+        </Action>
+      </React.Fragment>
+    );
+  }
+}

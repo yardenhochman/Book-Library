@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import Modal from '@material-ui/core/Modal';
 
 const ButtonStyle = styled(Button)`
   height: 25px;
@@ -8,15 +9,17 @@ const ButtonStyle = styled(Button)`
 `;
 
 export const SaveButton = ButtonStyle.extend.attrs({
-  type:"submit",
-  color:"primary",
-  variant:"raised"
+  type: 'submit',
+  color: 'primary',
+  variant: 'raised',
 })``;
 export const CancelButton = ButtonStyle.extend.attrs({
-  color:"secondary",
-  variant:"raised"
+  color: 'secondary',
+  variant: 'raised',
 })``;
-
+export const EditModal = styled(Modal).attrs({
+  disableAutoFocus: true,
+})``;
 
 export const ModalBody = styled(ValidatorForm)`
   position: relative;
@@ -30,8 +33,8 @@ export const ModalBody = styled(ValidatorForm)`
 `;
 
 export const TitleInput = styled(TextValidator).attrs({
-  name:"title",
-  label:"Title"
+  name: 'title',
+  label: 'Title',
 })`
   color: rgba(0, 0, 0, 0.87);
   font-size: 1.5rem;
@@ -60,8 +63,8 @@ export const DateInput = styled(TextValidator).attrs({
 `;
 
 export const AuthorInput = styled(TextValidator).attrs({
-  name:"author",
-  label:"Author"
+  name: 'author',
+  label: 'Author',
 })`
   font-size: 0.875rem;
   font-weight: 400;
